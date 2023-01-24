@@ -1,15 +1,17 @@
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-string data = string.Empty;
+object data = default!;
 
 Task.Run(async () =>
 {
     while (true)
     {
-        data = await File.ReadAllTextAsync("badge-data.json", Encoding.Default);
+        string json = await File.ReadAllTextAsync("badge-data.json", Encoding.Default);
+        data = JsonSerializer.Deserialize<object>(json)!;
         await Task.Delay(TimeSpan.FromHours(1));
     }
 });
